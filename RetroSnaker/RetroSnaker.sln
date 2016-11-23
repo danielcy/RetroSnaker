@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{33945859-D60B-BCD0-FEF2-B258347980A2}") = "RetroSnaker", "Assembly-CSharp.csproj", "{75FBA353-02A1-0C72-BB09-E2E3B6EF89C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75FBA353-02A1-0C72-BB09-E2E3B6EF89C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75FBA353-02A1-0C72-BB09-E2E3B6EF89C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75FBA353-02A1-0C72-BB09-E2E3B6EF89C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75FBA353-02A1-0C72-BB09-E2E3B6EF89C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
