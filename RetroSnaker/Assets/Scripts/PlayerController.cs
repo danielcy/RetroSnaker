@@ -1,42 +1,39 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 	public GameObject bean;
+	public GameObject bodies;
+	public GameObject timerObject;
+	public Text scoreText;
+	public Text loseText;
 
 	private MovingState movingState;
-	private float cycle;
-	private float currentTime;
 	private Vector3 direction;
 	private Vector3 preDirection;
-	private int currentMoveFrame;
 	private float maxMoveFrames;
+	private GameTimer timer;
+	private int scoreCount;
 
 	void Start () 
 	{
-		cycle = 1;
-		currentTime = 0;
 		movingState = MovingState.Waiting;
 		direction = new Vector3 (-1.0f, 0.0f, 0.0f);
 		preDirection = direction;
-		currentMoveFrame = 0;
-		maxMoveFrames = 10;
+		timer = timerObject.GetComponent<GameTimer> ();
+		maxMoveFrames = timer.GetMaxMoveFrames ();
+		scoreCount = -1;
+		AddAndUpdateScore ();
 	}
 
 	void Update () 
 	{
-		Debug.Log ("PlayerController");
 		SetPreDirection ();
+		movingState = timer.GetMovingState ();
 		switch (movingState) 
 		{
 		case MovingState.Waiting:
-			currentTime = currentTime + Time.deltaTime;
-			if (currentTime >= cycle) 
-			{
-				direction = preDirection;
-				movingState = MovingState.Moving;
-				currentTime = 0;
-			}
 			break;
 		case MovingState.Moving:
 			MoveOneStep ();
@@ -48,19 +45,30 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter (Collider other)
 	{
-		Debug.Log (movingState);
+		if (other.gameObject.tag == "Bean") 
+		{
+			other.gameObject.GetComponent<BeanController> ().MoveTheBean ();
+			AddAndUpdateScore ();
+		}
+		else if (other.gameObject.tag == "Wall" ||
+			(other.gameObject.tag == "Body" && other.gameObject != bodies.GetComponent<BodyController>() .GetLatestBody() )) 
+		{
+			loseText.gameObject.SetActive (true);
+			Time.timeScale = 0;
+		}
 	}
 
 	void MoveOneStep()
 	{
-		if (currentMoveFrame == maxMoveFrames) 
+		if (timer.IsFirstStepOfMoving ()) 
 		{
-			currentMoveFrame = 0;
-			movingState = MovingState.Waiting;
+			direction = preDirection;
+		}
+		if (timer.IsLastStepOfMoving ()) 
+		{
 			FixPosition ();
 			return;
 		}
-		currentMoveFrame = currentMoveFrame + 1;
 		transform.Translate (direction * (1 / maxMoveFrames));
 	}
 
@@ -95,17 +103,17 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	bool NeedToGrow()
+	public bool NeedToGrow()
 	{
-		if (transform.position + direction == bean.transform.position) {
+		if ((transform.position + direction - bean.transform.position).magnitude <= 0.5) {
 			return true;
 		} else
 			return false;
 	}
-}
 
-public enum MovingState 
-{
-	Moving = 0,
-	Waiting = 1,
+	void AddAndUpdateScore ()
+	{
+		scoreCount++;
+		scoreText.text = "SCORE: " + scoreCount.ToString ();
+	}
 }
